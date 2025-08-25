@@ -5,8 +5,8 @@ const Events = () => {
         console.log("Ativou o evento");
     };
 
-    const renderSomething = (x) => {
-        if(x){
+    const renderSomething = (condicao) => {
+        if(condicao){
             return <h1>Renderizando isso!</h1>;
         }
         else {
