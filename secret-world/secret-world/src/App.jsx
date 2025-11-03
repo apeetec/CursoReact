@@ -5,7 +5,7 @@ import './App.css'
 import StartScreen from './Components/StartScreen'
 
 // React
-import { use, useEffect, useState } from 'react'
+import { useCallback,useEffect, useState } from 'react'
 
 // Data
 import {wordsList} from './data/words.jsx'
@@ -33,9 +33,9 @@ function App() {
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [wrongLetters, setWrongLetters] = useState([]);
   const [guesses, setGuesses] = useState(guessesQty);
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(50);
 
-  const pickWordAndCategory = () => {
+  const pickWordAndCategory = useCallback(() => {
 
     // Escolher uma categoria aleatória
     const categories = Object.keys(words);
@@ -46,11 +46,12 @@ function App() {
     const word = words[category][Math.floor(Math.random() * words[category].length)];
 
     return {word, category};
-  };
+  }, [words]);
  
 
   // Função para iniciar o jogo
-  const startGame = () => {
+  const startGame = useCallback(() => {
+    clearLetterStates();
     //pickworld e pickcategory
     const {word, category} = pickWordAndCategory();
 
@@ -68,7 +69,7 @@ function App() {
     // Funções
 
     setGameStage(stages[1].name);
-  }
+  }, [pickWordAndCategory]);
 
   // Processo de digitar letras no input
   const verifyLetter = (letter) => {
@@ -93,6 +94,7 @@ function App() {
       setGuesses((actualGuesses) => actualGuesses - 1);
     } 
 }
+
 // Limpar estados de letras
 const clearLetterStates = () => {
   setGuessedLetters([]);
@@ -106,6 +108,20 @@ useEffect(() => {
     setGameStage(stages[2].name);
   }
 }, [guesses]);
+
+// Checar se o jogador venceu
+useEffect(()=>{
+
+  const uniqueLetters = [...new Set(letters)];
+  if(guessedLetters.length === uniqueLetters.length){
+    // Adicionar pontuação
+    setScore((actualScore) => actualScore += 100);
+    // Reiniciar o jogo com nova palavra
+    startGame();
+  }
+
+
+}, [guessedLetters, letters, startGame]);
 
   // Função para reiniciar o jogo
   const retry = () => {
@@ -125,7 +141,7 @@ useEffect(() => {
         wrongLetters={wrongLetters} 
         guesses={guesses} 
         score={score} />}
-        {gameStage === 'end' && <GameOver retry={retry} />}
+        {gameStage === 'end' && <GameOver retry={retry} score={score} />}
       </div>
 
     </>
