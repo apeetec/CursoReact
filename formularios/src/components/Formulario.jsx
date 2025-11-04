@@ -11,22 +11,15 @@ function Formulario() {
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   }
-  // console.log(nome);
-  console.log(email);
+  console.log("Email: "+email);
+  console.log("Nome: "+nome);
   // On Submit
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Enviando o formulário "+nome);
-  // }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Enviando o formulário "+nome);
+  }
   
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      // if(nome.trim() === "" || email.trim() === ""){
-      //   console.log("Por favor, preencha os campos");
-      //   return;
-      // }
-      nome.trim() === "" ? alert("Por favor, preencha o campo nome") : alert("Enviando o formulário "+nome);
-    }
+ 
   
   return (
     <div>
